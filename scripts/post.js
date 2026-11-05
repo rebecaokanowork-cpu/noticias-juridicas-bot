@@ -174,7 +174,11 @@ async function uploadToGitHub(buffer, filename) {
   );
   const asset = await uploadResp.json();
   if (!asset.browser_download_url) throw new Error(`GitHub upload falhou: ${JSON.stringify(asset)}`);
-  return asset.browser_download_url;
+
+  // Resolve o redirect do GitHub (302 → CDN do objects.githubusercontent.com)
+  // O Instagram não segue redirects ao validar a image_url
+  const resolved = await fetch(asset.browser_download_url, { method: 'HEAD', redirect: 'follow' });
+  return resolved.url;
 }
 
 async function postToInstagram(imageUrl, caption) {
