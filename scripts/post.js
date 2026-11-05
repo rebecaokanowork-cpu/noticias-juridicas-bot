@@ -54,7 +54,7 @@ const payload = await fetchResp.json();
 const noticias = Array.isArray(payload) ? payload : (payload.noticias ?? payload.articles ?? []);
 
 const toPost = noticias
-  .filter(n => n.slug && !posted.has(n.slug))
+  .filter(n => (n.slug || n.id) && !posted.has(n.slug || n.id))
   .slice(0, POSTS_PER_RUN);
 
 if (toPost.length === 0) {
@@ -80,7 +80,7 @@ for (const noticia of toPost) {
   const titulo    = noticia.titulo   || noticia.title   || '';
   const resumo    = noticia.resumo   || noticia.summary || noticia.excerpt || '';
   const categoria = noticia.categoria || noticia.category || 'Direito';
-  const slug      = noticia.slug;
+  const slug      = noticia.slug || noticia.id;
   const dataIso   = noticia.data || noticia.date || noticia.publishedAt || new Date().toISOString();
 
   console.log(`\n→ "${titulo.slice(0, 60)}..."`);
