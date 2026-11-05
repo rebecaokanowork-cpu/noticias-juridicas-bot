@@ -38,7 +38,14 @@ const posted = new Set(
 console.log(`Buscando artigos em ${NOTICIAS_URL}...`);
 const fetchResp = await fetch(NOTICIAS_URL);
 if (!fetchResp.ok) {
-  console.error(`Erro ao buscar noticias.json: ${fetchResp.status}`);
+  console.error(`Erro ao buscar noticias.json: HTTP ${fetchResp.status} em ${NOTICIAS_URL}`);
+  process.exit(1);
+}
+
+const contentType = fetchResp.headers.get('content-type') || '';
+if (!contentType.includes('json')) {
+  console.error(`URL não retornou JSON (recebeu: ${contentType})`);
+  console.error(`Verifique se ${NOTICIAS_URL} existe e está acessível publicamente.`);
   process.exit(1);
 }
 
