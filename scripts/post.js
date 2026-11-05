@@ -109,7 +109,8 @@ for (const noticia of toPost) {
     }
 
     // 2. Upload no GitHub Release
-    const imageUrl = await uploadToGitHub(imgBuffer, `${slug}.png`);
+    const ts = Date.now();
+    const imageUrl = await uploadToGitHub(imgBuffer, `${slug}-${ts}.png`);
     console.log(`  Upload: ${imageUrl}`);
 
     // 3. Caption
