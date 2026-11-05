@@ -82,8 +82,9 @@ for (const noticia of toPost) {
   const categoria = noticia.categoria || noticia.category || 'Direito';
   const slug      = noticia.slug || noticia.id;
   const dataIso   = noticia.data || noticia.date || noticia.publishedAt || new Date().toISOString();
-  const imagem    = noticia.imagem   || noticia.image   || noticia.thumbnail || '';
-  const fonte     = noticia.fonte    || noticia.source  || 'noticiajuridicas.com.br';
+  const imagemOriginal = noticia.imagem || noticia.image || noticia.thumbnail || '';
+  const fonte          = noticia.fonte   || noticia.source || 'noticiajuridicas.com.br';
+  const imagem         = await buscarImagem(titulo, categoria, imagemOriginal);
 
   console.log(`\n→ "${titulo.slice(0, 60)}..."`);
 
@@ -143,6 +144,35 @@ writeFileSync(postedPath, JSON.stringify([...posted], null, 2));
 console.log('\nTracker atualizado. Concluído.');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
+
+async function buscarImagem(titulo, categoria, imagemOriginal) {
+  const pixabayKey = process.env.PIXABAY_API_KEY;
+  if (!pixabayKey) return imagemOriginal; // sem chave, usa original
+
+  // Extrai palavras-chave do título (remove stopwords curtas)
+  const stopwords = new Set(['para','com','que','por','uma','dos','das','são','foi','sua','seu','mais','pelo','pela','como','isso','esse','esta','este','não','mas','até','sobre']);
+  const palavras = titulo
+    .toLowerCase()
+    .replace(/[^\w\s]/g, '')
+    .split(/\s+/)
+    .filter(w => w.length > 3 && !stopwords.has(w))
+    .slice(0, 3);
+
+  // Adiciona contexto jurídico
+  const termo = [...palavras, 'justice', 'law'].join('+');
+
+  try {
+    const url = `https://pixabay.com/api/?key=${pixabayKey}&q=${encodeURIComponent(termo)}&image_type=photo&orientation=vertical&min_width=1080&per_page=5&safesearch=true&order=popular`;
+    const resp = await fetch(url);
+    const data = await resp.json();
+    if (data.hits && data.hits.length > 0) {
+      return data.hits[0].largeImageURL;
+    }
+  } catch (e) {
+    console.log(`  Pixabay fallback: ${e.message}`);
+  }
+  return imagemOriginal;
+}
 
 async function uploadToGitHub(buffer, filename) {
   const token = process.env.GITHUB_TOKEN;
