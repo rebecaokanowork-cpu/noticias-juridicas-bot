@@ -82,6 +82,8 @@ for (const noticia of toPost) {
   const categoria = noticia.categoria || noticia.category || 'Direito';
   const slug      = noticia.slug || noticia.id;
   const dataIso   = noticia.data || noticia.date || noticia.publishedAt || new Date().toISOString();
+  const imagem    = noticia.imagem   || noticia.image   || noticia.thumbnail || '';
+  const fonte     = noticia.fonte    || noticia.source  || 'noticiajuridicas.com.br';
 
   console.log(`\n→ "${titulo.slice(0, 60)}..."`);
 
@@ -91,7 +93,9 @@ for (const noticia of toPost) {
       .replace(/{{TITULO}}/g,    esc(titulo))
       .replace(/{{RESUMO}}/g,    esc(resumo))
       .replace(/{{CATEGORIA}}/g, esc(categoria.toUpperCase()))
-      .replace(/{{DATA}}/g,      fmtDate(dataIso));
+      .replace(/{{DATA}}/g,      fmtDate(dataIso))
+      .replace(/{{IMAGEM}}/g,    imagem)
+      .replace(/{{FONTE}}/g,     esc(fonte));
 
     const page = await browser.newPage();
     await page.setViewport({ width: 1080, height: 1350, deviceScaleFactor: 1 });

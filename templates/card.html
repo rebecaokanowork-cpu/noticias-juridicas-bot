@@ -2,160 +2,153 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap');
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
     width: 1080px;
     height: 1350px;
     overflow: hidden;
-    background: #0D1117;
-    color: #F0EDE6;
     font-family: 'Inter', system-ui, sans-serif;
+    position: relative;
+    background: #111;
+  }
+
+  /* ── Imagem de fundo ─────────────────── */
+  .bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('{{IMAGEM}}');
+    background-size: cover;
+    background-position: center top;
+    background-color: #1a1a2e;
+  }
+
+  /* ── Gradientes sobrepostos ──────────── */
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0,0,0,.55) 0%,
+      rgba(0,0,0,.05) 28%,
+      rgba(0,0,0,.0)  45%,
+      rgba(0,0,0,.55) 65%,
+      rgba(0,0,0,.93) 100%
+    );
+  }
+
+  /* ── Conteúdo ────────────────────────── */
+  .content {
+    position: absolute;
+    inset: 0;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    padding: 60px 68px 60px;
   }
 
-  /* ── Topo ─────────────────────────── */
-  .header {
+  /* ── Logo ────────────────────────────── */
+  .logo {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 44px 64px 32px;
-    border-bottom: 1px solid rgba(240,237,230,0.12);
   }
 
-  .logo {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 900;
-    font-size: 28px;
+  .logo-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
     letter-spacing: .18em;
     text-transform: uppercase;
-    color: #F0EDE6;
+    color: #fff;
   }
 
   .logo-dot {
     display: inline-block;
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
     border-radius: 50%;
     background: #E8C77A;
-    margin-left: 6px;
+    margin-left: 5px;
     vertical-align: middle;
-    margin-bottom: 3px;
+    margin-bottom: 2px;
   }
 
-  .edition {
-    font-size: 13px;
-    color: rgba(240,237,230,0.4);
-    letter-spacing: .08em;
-    text-transform: uppercase;
-  }
-
-  /* ── Corpo ────────────────────────── */
-  .body {
-    flex: 1;
+  /* ── Bloco inferior ──────────────────── */
+  .bottom {
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    padding: 56px 64px;
-    gap: 28px;
+    gap: 18px;
   }
 
   .categoria {
     display: inline-block;
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: .2em;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .24em;
     text-transform: uppercase;
     color: #E8C77A;
-    border-bottom: 2px solid #E8C77A;
-    padding-bottom: 5px;
     align-self: flex-start;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #E8C77A;
   }
 
   .titulo {
     font-family: 'Playfair Display', Georgia, serif;
     font-weight: 900;
-    font-size: 62px;
-    line-height: 1.1;
-    color: #F0EDE6;
-    max-height: 480px;
-    overflow: hidden;
-  }
-
-  .divisor {
-    width: 56px;
-    height: 2px;
-    background: rgba(240,237,230,0.2);
-  }
-
-  .resumo {
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 1.65;
-    color: rgba(240,237,230,0.65);
-    max-height: 120px;
-    overflow: hidden;
+    font-size: 60px;
+    line-height: 1.08;
+    color: #fff;
+    text-shadow: 0 2px 24px rgba(0,0,0,.4);
+    /* Clamp a 5 linhas */
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 5;
     -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
-  /* ── Rodapé ───────────────────────── */
-  .footer {
+  .rodape {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 28px 64px 44px;
-    border-top: 1px solid rgba(240,237,230,0.12);
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,.18);
   }
 
-  .site {
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: .06em;
-    color: rgba(240,237,230,0.5);
-    text-transform: lowercase;
+  .fonte {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.5);
   }
 
   .data {
-    font-size: 13px;
-    color: rgba(240,237,230,0.35);
-    letter-spacing: .06em;
-  }
-
-  /* Faixa lateral esquerda decorativa */
-  .accent-bar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 6px;
-    height: 100%;
-    background: linear-gradient(to bottom, #E8C77A, #C9A95C);
+    font-size: 12px;
+    color: rgba(255,255,255,.35);
+    letter-spacing: .05em;
   }
 </style>
 </head>
 <body>
-  <div class="accent-bar"></div>
+  <div class="bg"></div>
+  <div class="overlay"></div>
 
-  <header class="header">
-    <span class="logo">Notícia Jurídica<span class="logo-dot"></span></span>
-    <span class="edition">Brasil · Direito &amp; Justiça</span>
-  </header>
+  <div class="content">
+    <div class="logo">
+      <span class="logo-text">Notícia Jurídica<span class="logo-dot"></span></span>
+    </div>
 
-  <main class="body">
-    <span class="categoria">{{CATEGORIA}}</span>
-    <h1 class="titulo">{{TITULO}}</h1>
-    <div class="divisor"></div>
-    <p class="resumo">{{RESUMO}}</p>
-  </main>
-
-  <footer class="footer">
-    <span class="site">noticiajuridicas.com.br</span>
-    <span class="data">{{DATA}}</span>
-  </footer>
+    <div class="bottom">
+      <span class="categoria">{{CATEGORIA}}</span>
+      <h1 class="titulo">{{TITULO}}</h1>
+      <div class="rodape">
+        <span class="fonte">{{FONTE}}</span>
+        <span class="data">{{DATA}}</span>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
