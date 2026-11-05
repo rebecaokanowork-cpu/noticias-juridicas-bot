@@ -44,6 +44,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add instagram-bot/data/posted.json
+          git add data/posted.json
           git diff --staged --quiet || git commit -m "chore: update posted articles [skip ci]"
           git push
