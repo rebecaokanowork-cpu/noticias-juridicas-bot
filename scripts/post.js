@@ -145,46 +145,57 @@ console.log('\nTracker atualizado. Concluído.');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+// Fotos temáticas jurídicas de alta qualidade (Unsplash, sem API)
+const FOTOS_FALLBACK = {
+  'penal':       'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
+  'criminal':    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
+  'civil':       'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1080&q=80',
+  'trabalhista': 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1080&q=80',
+  'tributário':  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
+  'tributario':  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
+  'constitucional': 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=1080&q=80',
+  'administrativo': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1080&q=80',
+  'default':     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1080&q=80',
+};
+
 async function buscarImagem(titulo, categoria, imagemOriginal) {
   const pixabayKey = process.env.PIXABAY_API_KEY;
-  if (!pixabayKey) return imagemOriginal; // sem chave, usa original
 
-  // Extrai palavras-chave do título (remove stopwords curtas)
-  const stopwords = new Set(['para','com','que','por','uma','dos','das','são','foi','sua','seu','mais','pelo','pela','como','isso','esse','esta','este','não','mas','até','sobre']);
-  const palavras = titulo
-    .toLowerCase()
-    .replace(/[^\w\s]/g, '')
-    .split(/\s+/)
-    .filter(w => w.length > 3 && !stopwords.has(w))
-    .slice(0, 3);
+  // Tenta Pixabay se tiver chave
+  if (pixabayKey) {
+    const stopwords = new Set(['para','com','que','por','uma','dos','das','são','foi','sua','seu','mais','pelo','pela','como','isso','esse','esta','este','não','mas','até','sobre']);
+    const palavras = titulo
+      .toLowerCase()
+      .replace(/[^\w\s]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !stopwords.has(w))
+      .slice(0, 3);
 
-  // Adiciona contexto jurídico
-  const termos = [...palavras, 'justice law'].slice(0, 3).join(' ');
-
-  try {
-    const params = new URLSearchParams({
-      key: pixabayKey,
-      q: termos,
-      image_type: 'photo',
-      orientation: 'vertical',
-      per_page: '5',
-      safesearch: 'true',
-      order: 'popular',
-    });
-    const url = `https://pixabay.com/api/?${params}`;
-    const resp = await fetch(url);
-    if (!resp.ok) {
-      console.log(`  Pixabay HTTP ${resp.status} — usando imagem original`);
-      return imagemOriginal;
+    const termos = [...palavras, 'justice law'].slice(0, 3).join(' ');
+    try {
+      const params = new URLSearchParams({
+        key: pixabayKey, q: termos, image_type: 'photo',
+        orientation: 'vertical', per_page: '5', safesearch: 'true', order: 'popular',
+      });
+      const resp = await fetch(`https://pixabay.com/api/?${params}`);
+      if (resp.ok) {
+        const data = await resp.json();
+        if (data.hits && data.hits.length > 0) return data.hits[0].largeImageURL;
+      } else {
+        console.log(`  Pixabay HTTP ${resp.status} — usando fallback temático`);
+      }
+    } catch (e) {
+      console.log(`  Pixabay erro: ${e.message}`);
     }
-    const data = await resp.json();
-    if (data.hits && data.hits.length > 0) {
-      return data.hits[0].largeImageURL;
-    }
-  } catch (e) {
-    console.log(`  Pixabay fallback: ${e.message}`);
   }
-  return imagemOriginal;
+
+  // Fallback: foto temática por categoria
+  const cat = (categoria || '').toLowerCase();
+  const fotoTematica = Object.entries(FOTOS_FALLBACK).find(([k]) => cat.includes(k));
+  if (fotoTematica) return fotoTematica[1];
+
+  // Último recurso: imagem original do artigo
+  return imagemOriginal || FOTOS_FALLBACK.default;
 }
 
 async function uploadToGitHub(buffer, filename) {
