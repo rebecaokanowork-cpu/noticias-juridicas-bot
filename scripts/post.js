@@ -176,7 +176,7 @@ async function uploadToGitHub(buffer, filename) {
 }
 
 async function postToInstagram(imageUrl, caption) {
-  const base = `https://graph.instagram.com/v21.0/${IG_USER_ID}`;
+  const base = `https://graph.facebook.com/v21.0/${IG_USER_ID}`;
 
   // Criar container
   const createResp = await fetch(`${base}/media`, {
