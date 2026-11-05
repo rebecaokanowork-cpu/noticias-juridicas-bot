@@ -1,0 +1,16 @@
+{
+  "name": "noticia-juridica-instagram-bot",
+  "version": "1.0.0",
+  "description": "Automação de posts para o Instagram do Notícia Jurídica",
+  "type": "module",
+  "scripts": {
+    "post": "node scripts/post.js",
+    "test": "node scripts/post.js --dry-run"
+  },
+  "dependencies": {
+    "puppeteer": "^22.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 1080px;
+    height: 1350px;
+    overflow: hidden;
+    background: #0D1117;
+    color: #F0EDE6;
+    font-family: 'Inter', system-ui, sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Topo ─────────────────────────── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 44px 64px 32px;
+    border-bottom: 1px solid rgba(240,237,230,0.12);
+  }
+
+  .logo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-size: 28px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #F0EDE6;
+  }
+
+  .logo-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #E8C77A;
+    margin-left: 6px;
+    vertical-align: middle;
+    margin-bottom: 3px;
+  }
+
+  .edition {
+    font-size: 13px;
+    color: rgba(240,237,230,0.4);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ── Corpo ────────────────────────── */
+  .body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 56px 64px;
+    gap: 28px;
+  }
+
+  .categoria {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #E8C77A;
+    border-bottom: 2px solid #E8C77A;
+    padding-bottom: 5px;
+    align-self: flex-start;
+  }
+
+  .titulo {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 900;
+    font-size: 62px;
+    line-height: 1.1;
+    color: #F0EDE6;
+    max-height: 480px;
+    overflow: hidden;
+  }
+
+  .divisor {
+    width: 56px;
+    height: 2px;
+    background: rgba(240,237,230,0.2);
+  }
+
+  .resumo {
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1.65;
+    color: rgba(240,237,230,0.65);
+    max-height: 120px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  /* ── Rodapé ───────────────────────── */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 64px 44px;
+    border-top: 1px solid rgba(240,237,230,0.12);
+  }
+
+  .site {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: .06em;
+    color: rgba(240,237,230,0.5);
+    text-transform: lowercase;
+  }
+
+  .data {
+    font-size: 13px;
+    color: rgba(240,237,230,0.35);
+    letter-spacing: .06em;
+  }
+
+  /* Faixa lateral esquerda decorativa */
+  .accent-bar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background: linear-gradient(to bottom, #E8C77A, #C9A95C);
+  }
+</style>
+</head>
+<body>
+  <div class="accent-bar"></div>
+
+  <header class="header">
+    <span class="logo">Notícia Jurídica<span class="logo-dot"></span></span>
+    <span class="edition">Brasil · Direito &amp; Justiça</span>
+  </header>
+
+  <main class="body">
+    <span class="categoria">{{CATEGORIA}}</span>
+    <h1 class="titulo">{{TITULO}}</h1>
+    <div class="divisor"></div>
+    <p class="resumo">{{RESUMO}}</p>
+  </main>
+
+  <footer class="footer">
+    <span class="site">noticiajuridicas.com.br</span>
+    <span class="data">{{DATA}}</span>
+  </footer>
+</body>
+</html>
