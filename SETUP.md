@@ -1,4 +1,4 @@
-# Setup — Instagram Bot do Notícia Jurídica
+# Setup — Instagram Bot do Notícia Jurídicaa
 
 ## O que você precisa fazer (uma vez só.)
 
