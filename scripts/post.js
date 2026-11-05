@@ -14,6 +14,19 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
 
+// ─── Fotos temáticas jurídicas (Unsplash, sem API) ───────────────────────────
+const FOTOS_FALLBACK = {
+  'penal':          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
+  'criminal':       'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
+  'civil':          'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1080&q=80',
+  'trabalhista':    'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1080&q=80',
+  'tributário':     'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
+  'tributario':     'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
+  'constitucional': 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=1080&q=80',
+  'administrativo': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1080&q=80',
+  'default':        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1080&q=80',
+};
+
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const IG_USER_ID     = process.env.IG_USER_ID;
@@ -144,19 +157,6 @@ writeFileSync(postedPath, JSON.stringify([...posted], null, 2));
 console.log('\nTracker atualizado. Concluído.');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-// Fotos temáticas jurídicas de alta qualidade (Unsplash, sem API)
-const FOTOS_FALLBACK = {
-  'penal':       'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
-  'criminal':    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
-  'civil':       'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1080&q=80',
-  'trabalhista': 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1080&q=80',
-  'tributário':  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
-  'tributario':  'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
-  'constitucional': 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=1080&q=80',
-  'administrativo': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1080&q=80',
-  'default':     'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1080&q=80',
-};
 
 async function buscarImagem(titulo, categoria, imagemOriginal) {
   const pixabayKey = process.env.PIXABAY_API_KEY;
