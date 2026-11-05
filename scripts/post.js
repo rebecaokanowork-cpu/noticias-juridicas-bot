@@ -159,10 +159,19 @@ async function buscarImagem(titulo, categoria, imagemOriginal) {
     .slice(0, 3);
 
   // Adiciona contexto jurídico
-  const termo = [...palavras, 'justice', 'law'].join('+');
+  const termos = [...palavras, 'justice law'].slice(0, 3).join(' ');
 
   try {
-    const url = `https://pixabay.com/api/?key=${pixabayKey}&q=${encodeURIComponent(termo)}&image_type=photo&orientation=vertical&min_width=1080&per_page=5&safesearch=true&order=popular`;
+    const params = new URLSearchParams({
+      key: pixabayKey,
+      q: termos,
+      image_type: 'photo',
+      orientation: 'vertical',
+      per_page: '5',
+      safesearch: 'true',
+      order: 'popular',
+    });
+    const url = `https://pixabay.com/api/?${params}`;
     const resp = await fetch(url);
     if (!resp.ok) {
       console.log(`  Pixabay HTTP ${resp.status} — usando imagem original`);
