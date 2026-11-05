@@ -38,7 +38,6 @@ jobs:
           IG_ACCESS_TOKEN: ${{ secrets.IG_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
           POSTS_PER_RUN: '4'
           NOTICIAS_URL: 'https://noticiajuridicas.com.br/noticias.json'
 

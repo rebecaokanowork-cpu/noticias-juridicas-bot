@@ -3,152 +3,291 @@
 <head>
 <meta charset="UTF-8">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ouro: #C9A85C;
+    --ouro-fraco: rgba(201,168,92,.18);
+    --ouro-medio: rgba(201,168,92,.35);
+    --branco: #EDE8DF;
+    --branco-70: rgba(237,232,223,.70);
+    --branco-45: rgba(237,232,223,.45);
+    --branco-25: rgba(237,232,223,.25);
+    --branco-12: rgba(237,232,223,.12);
+  }
 
   body {
     width: 1080px;
     height: 1350px;
     overflow: hidden;
-    font-family: 'Inter', system-ui, sans-serif;
+    background: #090910;
+    color: var(--branco);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1, "liga" 1;
     position: relative;
-    background: #111;
   }
 
-  /* ── Imagem de fundo ─────────────────── */
+  /* ── Fundo ───────────────────────────── */
   .bg {
-    position: absolute;
-    inset: 0;
-    background-image: url('{{IMAGEM}}');
-    background-size: cover;
-    background-position: center top;
-    background-color: #1a1a2e;
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 130% 70% at 108% 108%, #18100300 0%, #18100380 100%),
+      radial-gradient(ellipse 100% 55% at   0%   0%, #0c1018cc 0%, transparent 60%),
+      #090910;
   }
 
-  /* ── Gradientes sobrepostos ──────────── */
-  .overlay {
+  /* ── Símbolo § watermark ─────────────── */
+  .simbolo {
     position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      to bottom,
-      rgba(0,0,0,.55) 0%,
-      rgba(0,0,0,.05) 28%,
-      rgba(0,0,0,.0)  45%,
-      rgba(0,0,0,.55) 65%,
-      rgba(0,0,0,.93) 100%
-    );
+    right: -40px; bottom: 60px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 760px; font-weight: 700;
+    line-height: 1; color: rgba(201,168,92,.035);
+    pointer-events: none; user-select: none;
   }
 
-  /* ── Conteúdo ────────────────────────── */
-  .content {
-    position: absolute;
-    inset: 0;
+  /* ── Barra dourada esquerda ──────────── */
+  .accent-bar {
+    position: absolute; left: 0; top: 0;
+    width: 4px; height: 100%;
+    background: linear-gradient(to bottom, var(--ouro) 0%, #7a5b10 60%, transparent 100%);
+  }
+
+  /* ── Layout principal ────────────────── */
+  .layout {
+    position: absolute; inset: 0;
+    padding: 56px 72px 56px 78px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 60px 68px 60px;
   }
 
-  /* ── Logo ────────────────────────────── */
-  .logo {
+  /* ══════════════ TOPO ═══════════════════ */
+
+  .topo { display: flex; flex-direction: column; gap: 0; }
+
+  .topo-linha1 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding-bottom: 16px;
   }
 
-  .logo-text {
-    font-family: 'Inter', sans-serif;
+  .logo-txt {
     font-weight: 700;
-    font-size: 18px;
-    letter-spacing: .18em;
+    font-size: 13px;
+    letter-spacing: .32em;
     text-transform: uppercase;
-    color: #fff;
+    color: var(--branco);
   }
 
-  .logo-dot {
-    display: inline-block;
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #E8C77A;
-    margin-left: 5px;
-    vertical-align: middle;
-    margin-bottom: 2px;
-  }
-
-  /* ── Bloco inferior ──────────────────── */
-  .bottom {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .categoria {
-    display: inline-block;
+  .edicao {
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .24em;
+    font-weight: 400;
+    letter-spacing: .14em;
     text-transform: uppercase;
-    color: #E8C77A;
-    align-self: flex-start;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #E8C77A;
+    color: var(--branco-25);
+  }
+
+  .divisor {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, var(--ouro) 0%, var(--ouro-fraco) 40%, transparent 100%);
+  }
+
+  .topo-linha2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+  }
+
+  .cat-bloco { display: flex; align-items: center; gap: 12px; }
+
+  .cat-ponto {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--ouro); flex-shrink: 0;
+  }
+
+  .cat-txt {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .3em; text-transform: uppercase;
+    color: var(--ouro);
+  }
+
+  .data-txt {
+    font-size: 11px; font-weight: 400;
+    letter-spacing: .1em;
+    color: var(--branco-25);
+  }
+
+  /* ══════════════ TÍTULO ═══════════════════ */
+
+  .titulo-zona { display: flex; flex-direction: column; gap: 20px; }
+
+  .fio-titulo {
+    width: 48px; height: 1.5px;
+    background: var(--ouro);
   }
 
   .titulo {
-    font-family: 'Playfair Display', Georgia, serif;
-    font-weight: 900;
-    font-size: 60px;
-    line-height: 1.08;
-    color: #fff;
-    text-shadow: 0 2px 24px rgba(0,0,0,.4);
-    /* Clamp a 5 linhas */
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-size: 66px;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+    color: var(--branco);
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  .rodape {
+  /* ══════════════ DESCRIÇÃO ═══════════════ */
+
+  .desc-zona { display: flex; flex-direction: column; gap: 0; }
+
+  .desc-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 18px;
+  }
+
+  .desc-cabecalho::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: var(--branco-12);
+  }
+
+  .desc-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--branco-25);
+    white-space: nowrap;
+  }
+
+  .aspas {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 400; line-height: 1;
+    color: var(--ouro); display: block;
+    margin-bottom: 10px; opacity: .65;
+  }
+
+  .resumo {
+    font-size: 19px;
+    font-weight: 300;
+    line-height: 1.72;
+    color: var(--branco-70);
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* ══════════════ RODAPÉ ════════════════ */
+
+  .rodape { display: flex; flex-direction: column; gap: 0; }
+
+  .divisor-rodape {
+    width: 100%; height: 1px;
+    background: var(--branco-12);
+    margin-bottom: 18px;
+  }
+
+  .rodape-linha {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding-top: 18px;
-    border-top: 1px solid rgba(255,255,255,.18);
   }
 
-  .fonte {
-    font-size: 12px;
-    font-weight: 600;
+  .rodape-esq { display: flex; flex-direction: column; gap: 4px; }
+
+  .site {
+    font-size: 12px; font-weight: 600;
     letter-spacing: .1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,.5);
+    color: var(--branco-45);
   }
 
-  .data {
-    font-size: 12px;
-    color: rgba(255,255,255,.35);
-    letter-spacing: .05em;
+  .fonte-txt {
+    font-size: 10px; font-weight: 400;
+    letter-spacing: .1em; text-transform: uppercase;
+    color: var(--branco-25);
+  }
+
+  .tags { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+
+  .tag {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: .1em;
+    color: var(--ouro);
+    opacity: .6;
   }
 </style>
 </head>
 <body>
   <div class="bg"></div>
-  <div class="overlay"></div>
+  <div class="accent-bar"></div>
+  <div class="simbolo">§</div>
 
-  <div class="content">
-    <div class="logo">
-      <span class="logo-text">Notícia Jurídica<span class="logo-dot"></span></span>
-    </div>
+  <div class="layout">
 
-    <div class="bottom">
-      <span class="categoria">{{CATEGORIA}}</span>
-      <h1 class="titulo">{{TITULO}}</h1>
-      <div class="rodape">
-        <span class="fonte">{{FONTE}}</span>
-        <span class="data">{{DATA}}</span>
+    <!-- TOPO: masthead completo -->
+    <div class="topo">
+      <div class="topo-linha1">
+        <span class="logo-txt">Notícia Jurídica</span>
+        <span class="edicao">Brasil · Direito &amp; Justiça</span>
+      </div>
+      <div class="divisor"></div>
+      <div class="topo-linha2">
+        <div class="cat-bloco">
+          <div class="cat-ponto"></div>
+          <span class="cat-txt">{{CATEGORIA}}</span>
+        </div>
+        <span class="data-txt">{{DATA}}</span>
       </div>
     </div>
+
+    <!-- TÍTULO -->
+    <div class="titulo-zona">
+      <div class="fio-titulo"></div>
+      <h1 class="titulo">{{TITULO}}</h1>
+    </div>
+
+    <!-- DESCRIÇÃO -->
+    <div class="desc-zona">
+      <div class="desc-cabecalho">
+        <span class="desc-label">em resumo</span>
+      </div>
+      <span class="aspas">"</span>
+      <p class="resumo">{{RESUMO}}</p>
+    </div>
+
+    <!-- RODAPÉ -->
+    <div class="rodape">
+      <div class="divisor-rodape"></div>
+      <div class="rodape-linha">
+        <div class="rodape-esq">
+          <span class="site">noticiajuridicas.com.br</span>
+          <span class="fonte-txt">via {{FONTE}}</span>
+        </div>
+        <div class="tags">
+          <span class="tag">#direitobrasil</span>
+          <span class="tag">#{{CATEGORIA}}</span>
+          <span class="tag">#OAB</span>
+        </div>
+      </div>
+    </div>
+
   </div>
 </body>
 </html>

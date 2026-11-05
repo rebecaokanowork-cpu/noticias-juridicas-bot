@@ -14,19 +14,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
 const DRY_RUN = process.argv.includes('--dry-run');
 
-// ─── Fotos temáticas jurídicas (Unsplash, sem API) ───────────────────────────
-const FOTOS_FALLBACK = {
-  'penal':          'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
-  'criminal':       'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1080&q=80',
-  'civil':          'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=1080&q=80',
-  'trabalhista':    'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1080&q=80',
-  'tributário':     'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
-  'tributario':     'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=1080&q=80',
-  'constitucional': 'https://images.unsplash.com/photo-1575505586569-646b2ca898fc?w=1080&q=80',
-  'administrativo': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1080&q=80',
-  'default':        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1080&q=80',
-};
-
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const IG_USER_ID     = process.env.IG_USER_ID;
@@ -95,9 +82,7 @@ for (const noticia of toPost) {
   const categoria = noticia.categoria || noticia.category || 'Direito';
   const slug      = noticia.slug || noticia.id;
   const dataIso   = noticia.data || noticia.date || noticia.publishedAt || new Date().toISOString();
-  const imagemOriginal = noticia.imagem || noticia.image || noticia.thumbnail || '';
-  const fonte          = noticia.fonte   || noticia.source || 'noticiajuridicas.com.br';
-  const imagem         = await buscarImagem(titulo, categoria, imagemOriginal);
+  const fonte = noticia.fonte || noticia.source || 'noticiajuridicas.com.br';
 
   console.log(`\n→ "${titulo.slice(0, 60)}..."`);
 
@@ -108,7 +93,6 @@ for (const noticia of toPost) {
       .replace(/{{RESUMO}}/g,    esc(resumo))
       .replace(/{{CATEGORIA}}/g, esc(categoria.toUpperCase()))
       .replace(/{{DATA}}/g,      fmtDate(dataIso))
-      .replace(/{{IMAGEM}}/g,    imagem)
       .replace(/{{FONTE}}/g,     esc(fonte));
 
     const page = await browser.newPage();
@@ -157,46 +141,6 @@ writeFileSync(postedPath, JSON.stringify([...posted], null, 2));
 console.log('\nTracker atualizado. Concluído.');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
-
-async function buscarImagem(titulo, categoria, imagemOriginal) {
-  const pixabayKey = process.env.PIXABAY_API_KEY;
-
-  // Tenta Pixabay se tiver chave
-  if (pixabayKey) {
-    const stopwords = new Set(['para','com','que','por','uma','dos','das','são','foi','sua','seu','mais','pelo','pela','como','isso','esse','esta','este','não','mas','até','sobre']);
-    const palavras = titulo
-      .toLowerCase()
-      .replace(/[^\w\s]/g, '')
-      .split(/\s+/)
-      .filter(w => w.length > 3 && !stopwords.has(w))
-      .slice(0, 3);
-
-    const termos = [...palavras, 'justice law'].slice(0, 3).join(' ');
-    try {
-      const params = new URLSearchParams({
-        key: pixabayKey, q: termos, image_type: 'photo',
-        orientation: 'vertical', per_page: '5', safesearch: 'true', order: 'popular',
-      });
-      const resp = await fetch(`https://pixabay.com/api/?${params}`);
-      if (resp.ok) {
-        const data = await resp.json();
-        if (data.hits && data.hits.length > 0) return data.hits[0].largeImageURL;
-      } else {
-        console.log(`  Pixabay HTTP ${resp.status} — usando fallback temático`);
-      }
-    } catch (e) {
-      console.log(`  Pixabay erro: ${e.message}`);
-    }
-  }
-
-  // Fallback: foto temática por categoria
-  const cat = (categoria || '').toLowerCase();
-  const fotoTematica = Object.entries(FOTOS_FALLBACK).find(([k]) => cat.includes(k));
-  if (fotoTematica) return fotoTematica[1];
-
-  // Último recurso: imagem original do artigo
-  return imagemOriginal || FOTOS_FALLBACK.default;
-}
 
 async function uploadToGitHub(buffer, filename) {
   const token = process.env.GITHUB_TOKEN;
