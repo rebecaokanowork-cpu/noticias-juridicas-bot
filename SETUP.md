@@ -1,6 +1,6 @@
 # Setup — Instagram Bot do Notícia Jurídica
 
-## O que você precisa fazer (uma vez só)
+## O que você precisa fazer (uma vez só.)
 
 ### 1. Criar repositório público no GitHub
 Suba esta pasta `instagram-bot/` como um repositório público.
