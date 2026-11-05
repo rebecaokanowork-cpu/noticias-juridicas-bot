@@ -164,6 +164,10 @@ async function buscarImagem(titulo, categoria, imagemOriginal) {
   try {
     const url = `https://pixabay.com/api/?key=${pixabayKey}&q=${encodeURIComponent(termo)}&image_type=photo&orientation=vertical&min_width=1080&per_page=5&safesearch=true&order=popular`;
     const resp = await fetch(url);
+    if (!resp.ok) {
+      console.log(`  Pixabay HTTP ${resp.status} — usando imagem original`);
+      return imagemOriginal;
+    }
     const data = await resp.json();
     if (data.hits && data.hits.length > 0) {
       return data.hits[0].largeImageURL;
