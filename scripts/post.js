@@ -108,8 +108,8 @@ for (const noticia of toPost) {
       continue;
     }
 
-    // 2. Upload no catbox.moe
-    const imageUrl = await uploadToCatbox(imgBuffer);
+    // 2. Upload no GitHub Release
+    const imageUrl = await uploadToGitHub(imgBuffer, `${slug}.png`);
     console.log(`  Upload: ${imageUrl}`);
 
     // 3. Caption
@@ -139,23 +139,39 @@ console.log('\nTracker atualizado. Concluído.');
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-async function uploadToCatbox(buffer) {
-  const formData = new FormData();
-  formData.append('reqtype', 'fileupload');
-  formData.append(
-    'fileToUpload',
-    new Blob([buffer], { type: 'image/png' }),
-    'card.png'
+async function uploadToGitHub(buffer, filename) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo  = process.env.GITHUB_REPOSITORY;
+  const tag   = 'card-storage';
+  const api   = `https://api.github.com/repos/${repo}`;
+  const headers = {
+    'Authorization': `Bearer ${token}`,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+
+  // Busca ou cria a release card-storage
+  let releaseId;
+  const getResp = await fetch(`${api}/releases/tags/${tag}`, { headers });
+  if (getResp.ok) {
+    releaseId = (await getResp.json()).id;
+  } else {
+    const createResp = await fetch(`${api}/releases`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tag_name: tag, name: 'Card Storage', draft: false, prerelease: false }),
+    });
+    releaseId = (await createResp.json()).id;
+  }
+
+  // Faz upload do asset
+  const uploadResp = await fetch(
+    `https://uploads.github.com/repos/${repo}/releases/${releaseId}/assets?name=${filename}`,
+    { method: 'POST', headers: { ...headers, 'Content-Type': 'image/png' }, body: buffer }
   );
-
-  const resp = await fetch('https://catbox.moe/user/api.php', {
-    method: 'POST',
-    body: formData,
-  });
-
-  const url = (await resp.text()).trim();
-  if (!url.startsWith('http')) throw new Error(`catbox.moe retornou: ${url}`);
-  return url;
+  const asset = await uploadResp.json();
+  if (!asset.browser_download_url) throw new Error(`GitHub upload falhou: ${JSON.stringify(asset)}`);
+  return asset.browser_download_url;
 }
 
 async function postToInstagram(imageUrl, caption) {
